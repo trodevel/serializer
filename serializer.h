@@ -1,6 +1,6 @@
 /*
 
-Text std::isteram, std::isteram serializer.
+Text std::isteram, std::osteram serializer.
 
 Copyright (C) 2016 Sergey Kolevatov
 
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 3720 $ $Date:: 2016-04-10 #$ $Author: serge $
+// $Revision: 3721 $ $Date:: 2016-04-10 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
