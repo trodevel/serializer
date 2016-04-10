@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 3721 $ $Date:: 2016-04-10 #$ $Author: serge $
+// $Revision: 3722 $ $Date:: 2016-04-10 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -29,10 +29,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <vector>           // std::vector
 #include <map>              // std::map
 #include <cstdint>          // uint32_t
+#include <memory>
 
 #include "namespace_lib.h"  // NAMESPACE_SERIALIZER_START
 
 NAMESPACE_SERIALIZER_START
+
+template <class _T>
+std::shared_ptr<_T> * load( std::istream & is, std::shared_ptr<_T> * e )
+{
+    _T * t = load( is, (_T*) nullptr );
+
+    if( t == nullptr )
+        return nullptr;
+
+    e->reset( t );
+
+    return e;
+}
+
+template <class _T>
+bool save( std::ostream & os, const std::shared_ptr<_T> e )
+{
+    return save( os, e.get() );
+}
 
 std::string * load( std::istream & is, std::string * e );
 bool save( std::ostream & os, const std::string * e );

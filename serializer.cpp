@@ -19,13 +19,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 3721 $ $Date:: 2016-04-10 #$ $Author: serge $
+// $Revision: 3723 $ $Date:: 2016-04-10 #$ $Author: serge $
 
 #include "serializer.h"     // self
 
 #include <stdexcept>        // std::invalid_argument
 
-using namespace serializer;
+NAMESPACE_SERIALIZER_START
 
 std::string * load( std::istream & is, std::string * e )
 {
@@ -78,3 +78,5 @@ bool save( std::ostream & os, const uint32_t e )
 
     return true;
 }
+
+NAMESPACE_SERIALIZER_END
