@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 3722 $ $Date:: 2016-04-10 #$ $Author: serge $
+// $Revision: 4110 $ $Date:: 2016-07-08 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -94,6 +94,40 @@ std::map<_T,_V>* load( std::istream & is, std::map<_T,_V> * e )
     }
 
     return e;
+}
+
+template <class _T,class _V>
+bool save( std::ostream & os, const std::map<_T,_V> * e )
+{
+    typedef typename std::map<_T,_V> _C;
+    typename _C::size_type size;
+
+    const _C & er = *e;
+
+    os << er.size() << "\n";
+
+    for( auto & el: er )
+    {
+        {
+            bool b = save( os, el.first );
+
+            os << "\n";
+
+            if( b == false )
+                return false;
+        }
+
+        {
+            bool b = save( os, el.second );
+
+            os << "\n";
+
+            if( b == false )
+                return false;
+        }
+    }
+
+    return true;
 }
 
 template <class _T>
