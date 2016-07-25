@@ -1,6 +1,6 @@
 /*
 
-Text std::isteram, std::osteram serializer.
+Text std::istream, std::ostream serializer.
 
 Copyright (C) 2016 Sergey Kolevatov
 
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 4110 $ $Date:: 2016-07-08 #$ $Author: serge $
+// $Revision: 4256 $ $Date:: 2016-07-25 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -55,10 +55,32 @@ bool save( std::ostream & os, const std::shared_ptr<_T> e )
 }
 
 std::string * load( std::istream & is, std::string * e );
-bool save( std::ostream & os, const std::string * e );
+bool save( std::ostream & os, const std::string & e );
 
 uint32_t * load( std::istream & is, uint32_t * e );
 bool save( std::ostream & os, const uint32_t e );
+
+template <class _IT>
+bool save( std::ostream & os, _IT first, _IT last )
+{
+    auto size = std::distance( first, last );
+
+    os << size << "\n";
+
+    auto & it = first;
+
+    for( ; it != last; ++it )
+    {
+        bool b = save( os, *it );
+
+        if( b == false )
+            return false;
+
+        os << "\n";
+    }
+
+    return true;
+}
 
 template <class _T,class _V>
 std::map<_T,_V>* load( std::istream & is, std::map<_T,_V> * e )
@@ -97,37 +119,9 @@ std::map<_T,_V>* load( std::istream & is, std::map<_T,_V> * e )
 }
 
 template <class _T,class _V>
-bool save( std::ostream & os, const std::map<_T,_V> * e )
+bool save( std::ostream & os, const std::map<_T,_V> & e )
 {
-    typedef typename std::map<_T,_V> _C;
-    typename _C::size_type size;
-
-    const _C & er = *e;
-
-    os << er.size() << "\n";
-
-    for( auto & el: er )
-    {
-        {
-            bool b = save( os, el.first );
-
-            os << "\n";
-
-            if( b == false )
-                return false;
-        }
-
-        {
-            bool b = save( os, el.second );
-
-            os << "\n";
-
-            if( b == false )
-                return false;
-        }
-    }
-
-    return true;
+    return save( os, e.begin(), e.end() );
 }
 
 template <class _T>
@@ -156,23 +150,9 @@ std::vector<_T>* load( std::istream & is, std::vector<_T> * e )
 }
 
 template <class _T>
-bool save( std::ostream & os, const std::vector<_T> * e )
+bool save( std::ostream & os, const std::vector<_T> & e )
 {
-    const std::vector<_T> & er = *e;
-
-    os << er.size() << "\n";
-
-    for( auto & el: er )
-    {
-        bool b = save( os, el );
-
-        os << "\n";
-
-        if( b == false )
-            return false;
-    }
-
-    return true;
+    return save( os, e.begin(), e.end() );
 }
 
 NAMESPACE_SERIALIZER_END

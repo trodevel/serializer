@@ -1,6 +1,6 @@
 /*
 
-Text std::isteram, std::osteram serializer.
+Text std::istream, std::ostream serializer.
 
 Copyright (C) 2016 Sergey Kolevatov
 
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 3723 $ $Date:: 2016-04-10 #$ $Author: serge $
+// $Revision: 4254 $ $Date:: 2016-07-25 #$ $Author: serge $
 
 #include "serializer.h"     // self
 
@@ -30,7 +30,7 @@ NAMESPACE_SERIALIZER_START
 std::string * load( std::istream & is, std::string * e )
 {
     if( e == nullptr )
-        throw std::invalid_argument( "load: argument is null" );
+        throw std::invalid_argument( "load: std::string: argument is null" );
 
     std::string & res = * e;
 
@@ -42,9 +42,9 @@ std::string * load( std::istream & is, std::string * e )
     return e;
 }
 
-bool save( std::ostream & os, const std::string * e )
+bool save( std::ostream & os, const std::string & e )
 {
-    os << *e << " ";
+    os << e << " ";
 
     if( os.fail() )
         return false;
@@ -55,7 +55,7 @@ bool save( std::ostream & os, const std::string * e )
 uint32_t * load( std::istream & is, uint32_t * e )
 {
     if( e == nullptr )
-        throw std::invalid_argument( "load: argument is null" );
+        throw std::invalid_argument( "load: uint32_t: argument is null" );
 
     uint32_t res;
 
