@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 4256 $ $Date:: 2016-07-25 #$ $Author: serge $
+// $Revision: 4273 $ $Date:: 2016-07-28 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -60,12 +60,17 @@ bool save( std::ostream & os, const std::string & e );
 uint32_t * load( std::istream & is, uint32_t * e );
 bool save( std::ostream & os, const uint32_t e );
 
-template <class _IT>
+template <bool BREAKLINE = false, class _IT>
 bool save( std::ostream & os, _IT first, _IT last )
 {
     auto size = std::distance( first, last );
 
-    os << size << "\n";
+    save( os, size );
+
+    if( BREAKLINE )
+    {
+        os << "\n";
+    }
 
     auto & it = first;
 
@@ -76,7 +81,10 @@ bool save( std::ostream & os, _IT first, _IT last )
         if( b == false )
             return false;
 
-        os << "\n";
+        if( BREAKLINE )
+        {
+            os << "\n";
+        }
     }
 
     return true;
@@ -149,10 +157,10 @@ std::vector<_T>* load( std::istream & is, std::vector<_T> * e )
     return e;
 }
 
-template <class _T>
+template <bool BREAKLINE = false, class _T>
 bool save( std::ostream & os, const std::vector<_T> & e )
 {
-    return save( os, e.begin(), e.end() );
+    return save<BREAKLINE>( os, e.begin(), e.end() );
 }
 
 NAMESPACE_SERIALIZER_END
