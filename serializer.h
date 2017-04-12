@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 4273 $ $Date:: 2016-07-28 #$ $Author: serge $
+// $Revision: 6607 $ $Date:: 2017-04-12 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -59,6 +59,22 @@ bool save( std::ostream & os, const std::string & e );
 
 uint32_t * load( std::istream & is, uint32_t * e );
 bool save( std::ostream & os, const uint32_t e );
+
+template <class _T,class _V>
+bool save( std::ostream & os, const std::pair<_T,_V> & e )
+{
+    bool b = save( os, e.first );
+
+    if( b == false )
+        return false;
+
+    b = save( os, e.second );
+
+    if( b == false )
+        return false;
+
+    return true;
+}
 
 template <bool BREAKLINE = false, class _IT>
 bool save( std::ostream & os, _IT first, _IT last )
