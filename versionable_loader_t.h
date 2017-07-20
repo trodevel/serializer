@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 6138 $ $Date:: 2017-03-20 #$ $Author: serge $
+// $Revision: 7240 $ $Date:: 2017-07-19 #$ $Author: serge $
 
 #ifndef SERIALIZER_VERSIONABLE_LOADER_T_H
 #define SERIALIZER_VERSIONABLE_LOADER_T_H
@@ -77,6 +77,60 @@ public:
             return Plug::load_1( is, e );
         case 2:
             return Plug::load_2( is, e );
+        default:
+            throw std::runtime_error( "unsupported version " + std::to_string( version ) );
+            break;
+        }
+
+        return nullptr;
+    }
+
+    template <class T>
+    static T* load_t_1_2_3( std::istream & is, T* e )
+    {
+        unsigned int    version;
+
+        is >> version;
+
+        if( is.fail() )
+            return nullptr;
+
+        switch( version )
+        {
+        case 1:
+            return Plug::load_1( is, e );
+        case 2:
+            return Plug::load_2( is, e );
+        case 3:
+            return Plug::load_3( is, e );
+        default:
+            throw std::runtime_error( "unsupported version " + std::to_string( version ) );
+            break;
+        }
+
+        return nullptr;
+    }
+
+    template <class T>
+    static T* load_t_1_2_3_4( std::istream & is, T* e )
+    {
+        unsigned int    version;
+
+        is >> version;
+
+        if( is.fail() )
+            return nullptr;
+
+        switch( version )
+        {
+        case 1:
+            return Plug::load_1( is, e );
+        case 2:
+            return Plug::load_2( is, e );
+        case 3:
+            return Plug::load_3( is, e );
+        case 4:
+            return Plug::load_4( is, e );
         default:
             throw std::runtime_error( "unsupported version " + std::to_string( version ) );
             break;
