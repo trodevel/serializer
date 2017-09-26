@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 6607 $ $Date:: 2017-04-12 #$ $Author: serge $
+// $Revision: 7919 $ $Date:: 2017-09-26 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -54,11 +54,45 @@ bool save( std::ostream & os, const std::shared_ptr<_T> e )
     return save( os, e.get() );
 }
 
+
 std::string * load( std::istream & is, std::string * e );
 bool save( std::ostream & os, const std::string & e );
 
+template <class T>
+T * load_pod( std::istream & is, T * e )
+{
+    if( e == nullptr )
+        throw std::invalid_argument( "load_pod: argument is null" );
+
+    T res;
+
+    is >> res;
+
+    if( is.fail() )
+        return nullptr;
+
+    *e = res;
+
+    return e;
+}
+
+template <class T>
+bool save_pod( std::ostream & os, const T & e )
+{
+    os << e << " ";
+
+    if( os.fail() )
+        return false;
+
+    return true;
+}
+
 uint32_t * load( std::istream & is, uint32_t * e );
 bool save( std::ostream & os, const uint32_t e );
+
+int32_t * load( std::istream & is, int32_t * e );
+bool save( std::ostream & os, const int32_t e );
+
 
 template <class _T,class _V>
 bool save( std::ostream & os, const std::pair<_T,_V> & e )

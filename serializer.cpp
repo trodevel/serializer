@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 4254 $ $Date:: 2016-07-25 #$ $Author: serge $
+// $Revision: 7919 $ $Date:: 2017-09-26 #$ $Author: serge $
 
 #include "serializer.h"     // self
 
@@ -54,29 +54,22 @@ bool save( std::ostream & os, const std::string & e )
 
 uint32_t * load( std::istream & is, uint32_t * e )
 {
-    if( e == nullptr )
-        throw std::invalid_argument( "load: uint32_t: argument is null" );
-
-    uint32_t res;
-
-    is >> res;
-
-    if( is.fail() )
-        return nullptr;
-
-    *e = res;
-
-    return e;
+    return load_pod( is, e );
 }
 
 bool save( std::ostream & os, const uint32_t e )
 {
-    os << e << " ";
+    return save_pod( os, e );
+}
 
-    if( os.fail() )
-        return false;
+int32_t * load( std::istream & is, int32_t * e )
+{
+    return load_pod( is, e );
+}
 
-    return true;
+bool save( std::ostream & os, const int32_t e )
+{
+    return save_pod( os, e );
 }
 
 NAMESPACE_SERIALIZER_END

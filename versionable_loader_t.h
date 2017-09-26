@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 7240 $ $Date:: 2017-07-19 #$ $Author: serge $
+// $Revision: 7457 $ $Date:: 2017-08-01 #$ $Author: serge $
 
 #ifndef SERIALIZER_VERSIONABLE_LOADER_T_H
 #define SERIALIZER_VERSIONABLE_LOADER_T_H
