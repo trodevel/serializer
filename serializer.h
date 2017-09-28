@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 7919 $ $Date:: 2017-09-26 #$ $Author: serge $
+// $Revision: 7939 $ $Date:: 2017-09-28 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -90,8 +90,14 @@ bool save_pod( std::ostream & os, const T & e )
 uint32_t * load( std::istream & is, uint32_t * e );
 bool save( std::ostream & os, const uint32_t e );
 
+uint64_t * load( std::istream & is, uint64_t * e );
+bool save( std::ostream & os, const uint64_t e );
+
 int32_t * load( std::istream & is, int32_t * e );
 bool save( std::ostream & os, const int32_t e );
+
+int64_t * load( std::istream & is, int64_t * e );
+bool save( std::ostream & os, const int64_t e );
 
 
 template <class _T,class _V>

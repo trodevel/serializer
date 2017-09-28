@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 7919 $ $Date:: 2017-09-26 #$ $Author: serge $
+// $Revision: 7939 $ $Date:: 2017-09-28 #$ $Author: serge $
 
 #include "serializer.h"     // self
 
@@ -62,12 +62,32 @@ bool save( std::ostream & os, const uint32_t e )
     return save_pod( os, e );
 }
 
+uint64_t * load( std::istream & is, uint64_t * e )
+{
+    return load_pod( is, e );
+}
+
+bool save( std::ostream & os, const uint64_t e )
+{
+    return save_pod( os, e );
+}
+
 int32_t * load( std::istream & is, int32_t * e )
 {
     return load_pod( is, e );
 }
 
 bool save( std::ostream & os, const int32_t e )
+{
+    return save_pod( os, e );
+}
+
+int64_t * load( std::istream & is, int64_t * e )
+{
+    return load_pod( is, e );
+}
+
+bool save( std::ostream & os, const int64_t e )
 {
     return save_pod( os, e );
 }
