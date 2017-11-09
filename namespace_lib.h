@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 3748 $ $Date:: 2016-04-11 #$ $Author: serge $
+// $Revision: 3720 $ $Date:: 2016-04-10 #$ $Author: serge $
 
 #ifndef NAMESPACE_LIB_SERIALIZER_H
 #define NAMESPACE_LIB_SERIALIZER_H

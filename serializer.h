@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 7939 $ $Date:: 2017-09-28 #$ $Author: serge $
+// $Revision: 8322 $ $Date:: 2017-11-09 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -116,8 +116,62 @@ bool save( std::ostream & os, const std::pair<_T,_V> & e )
     return true;
 }
 
-template <bool BREAKLINE = false, class _IT>
-bool save( std::ostream & os, _IT first, _IT last )
+template <class _T,class _V>
+std::pair<const _T,_V> * load( std::istream & is, std::pair<const _T,_V> * e )
+{
+    if( e == nullptr )
+        throw std::invalid_argument( "load: argument is null" );
+
+    {
+        auto b = load( is, const_cast<_T*>( & e->first ) );
+        if( b == nullptr )
+            return nullptr;
+    }
+
+    {
+        auto b = load( is, & e->second );
+        if( b == nullptr )
+            return nullptr;
+    }
+
+    return e;
+}
+
+template <class _T,class _V>
+std::pair<_T,_V> * load( std::istream & is, std::pair<_T,_V> * e )
+{
+    if( e == nullptr )
+        throw std::invalid_argument( "load: argument is null" );
+
+    {
+        auto b = load( is, & e->first );
+        if( b == nullptr )
+            return nullptr;
+    }
+
+    {
+        auto b = load( is, & e->second );
+        if( b == nullptr )
+            return nullptr;
+    }
+
+    return e;
+}
+
+template< class T >
+bool generic_saver( std::ostream& os, const T & e )
+{
+    return save( os, e );
+}
+
+template< class T >
+T* generic_loader( std::istream& is, T * e )
+{
+    return load( is, e );
+}
+
+template <bool BREAKLINE = false, class _IT, class Saver>
+bool save_iter( std::ostream & os, _IT first, _IT last, Saver saver )
 {
     auto size = std::distance( first, last );
 
@@ -132,7 +186,7 @@ bool save( std::ostream & os, _IT first, _IT last )
 
     for( ; it != last; ++it )
     {
-        bool b = save( os, *it );
+        bool b = saver( os, *it );
 
         if( b == false )
             return false;
@@ -146,77 +200,61 @@ bool save( std::ostream & os, _IT first, _IT last )
     return true;
 }
 
-template <class _T,class _V>
-std::map<_T,_V>* load( std::istream & is, std::map<_T,_V> * e )
+template <bool BREAKLINE = false, class C, class Saver>
+bool save_cont( std::ostream & os, const C & c, Saver saver )
 {
-    typedef typename std::map<_T,_V> _C;
-    typename _C::size_type size;
+    return save_iter<BREAKLINE>( os, c.begin(), c.end(), saver );
+}
+
+template <class C, class Loader>
+C* load_cont( std::istream & is, C * c, Loader loader )
+{
+    if( c == nullptr )
+        throw std::invalid_argument( "load_cont: argument is null" );
+
+    typename C::size_type size;
 
     is >> size;
 
     if( is.fail() )
         return nullptr;
 
-    for( typename _C::size_type i = 0; i < size; ++i )
+    for( typename C::size_type i = 0; i < size; ++i )
     {
-        typename _C::key_type k;
-        typename _C::mapped_type v;
+        typename C::value_type el;
 
-        {
-            auto b = load( is, & k );
-            if( b == nullptr )
-                return nullptr;
-        }
+        auto b = loader( is, & el );
+        if( b == nullptr )
+            return nullptr;
 
-        {
-            auto b = load( is, & v );
-            if( b == nullptr )
-                return nullptr;
-        }
-
-        typename _C::value_type el( k, v );
-
-        e->insert( el );
+        c->insert( c->end(), el );
     }
 
-    return e;
+    return c;
 }
 
 template <class _T,class _V>
+std::map<_T,_V>* load( std::istream & is, std::map<_T,_V> * e )
+{
+    return load_cont( is, e, generic_loader<typename std::map<_T,_V>::value_type> );
+}
+
+template <bool BREAKLINE = false, class _T,class _V>
 bool save( std::ostream & os, const std::map<_T,_V> & e )
 {
-    return save( os, e.begin(), e.end() );
+    return save_cont<BREAKLINE>( os, e, generic_saver<typename std::map<_T,_V>::value_type>  );
 }
 
 template <class _T>
 std::vector<_T>* load( std::istream & is, std::vector<_T> * e )
 {
-    typename std::vector<_T>::size_type size;
-
-    std::vector<_T> & er = *e;
-
-    is >> size;
-
-    if( is.fail() )
-        return nullptr;
-
-    er.resize( size );
-
-    for( typename std::vector<_T>::size_type i = 0; i < size; ++i )
-    {
-        auto b = load( is, & er[ i ] );
-
-        if( b == nullptr )
-            return nullptr;
-    }
-
-    return e;
+    return load_cont( is, e, generic_loader<typename std::vector<_T>::value_type> );
 }
 
 template <bool BREAKLINE = false, class _T>
 bool save( std::ostream & os, const std::vector<_T> & e )
 {
-    return save<BREAKLINE>( os, e.begin(), e.end() );
+    return save_cont<BREAKLINE>( os, e, generic_saver<typename std::vector<_T>::value_type>  );
 }
 
 NAMESPACE_SERIALIZER_END
