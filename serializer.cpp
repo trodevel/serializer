@@ -19,11 +19,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 7939 $ $Date:: 2017-09-28 #$ $Author: serge $
+// $Revision: 11620 $ $Date:: 2019-05-25 #$ $Author: serge $
 
 #include "serializer.h"     // self
 
 #include <stdexcept>        // std::invalid_argument
+
+#include "utils/nonascii_hex_codec.h"   // nonascii_hex_codec::decode
+
 
 NAMESPACE_SERIALIZER_START
 
@@ -50,6 +53,40 @@ bool save( std::ostream & os, const std::string & e )
         return false;
 
     return true;
+}
+
+std::string * load_enc( std::istream & is, std::string * e )
+{
+    std::string enc;
+
+    if( load( is, & enc ) == nullptr )
+        return nullptr;
+
+    * e = utils::nonascii_hex_codec::decode( enc );
+
+    return e;
+}
+
+bool save_enc( std::ostream & os, const std::string & e )
+{
+    return save( os, utils::nonascii_hex_codec::encode( e ) );
+}
+
+bool * load( std::istream & is, bool * e )
+{
+    uint32_t res;
+
+    if( load( is, & res ) == false )
+        return nullptr;
+
+    * e = res ? true : false;
+
+    return e;
+}
+
+bool save( std::ostream & os, const bool e )
+{
+    return save( os, static_cast<uint32_t>( e ) );
 }
 
 uint32_t * load( std::istream & is, uint32_t * e )
@@ -88,6 +125,16 @@ int64_t * load( std::istream & is, int64_t * e )
 }
 
 bool save( std::ostream & os, const int64_t e )
+{
+    return save_pod( os, e );
+}
+
+double * load( std::istream & is, double * e )
+{
+    return load_pod( is, e );
+}
+
+bool save( std::ostream & os, const double e )
 {
     return save_pod( os, e );
 }

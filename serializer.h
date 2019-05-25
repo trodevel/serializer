@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-// $Revision: 8322 $ $Date:: 2017-11-09 #$ $Author: serge $
+// $Revision: 11620 $ $Date:: 2019-05-25 #$ $Author: serge $
 
 #ifndef SERIALIZER_SERIALIZER_H
 #define SERIALIZER_SERIALIZER_H
@@ -54,9 +54,11 @@ bool save( std::ostream & os, const std::shared_ptr<_T> e )
     return save( os, e.get() );
 }
 
-
 std::string * load( std::istream & is, std::string * e );
 bool save( std::ostream & os, const std::string & e );
+
+std::string * load_enc( std::istream & is, std::string * e );
+bool save_enc( std::ostream & os, const std::string & e );
 
 template <class T>
 T * load_pod( std::istream & is, T * e )
@@ -87,6 +89,9 @@ bool save_pod( std::ostream & os, const T & e )
     return true;
 }
 
+bool * load( std::istream & is, bool * e );
+bool save( std::ostream & os, const bool e );
+
 uint32_t * load( std::istream & is, uint32_t * e );
 bool save( std::ostream & os, const uint32_t e );
 
@@ -99,6 +104,8 @@ bool save( std::ostream & os, const int32_t e );
 int64_t * load( std::istream & is, int64_t * e );
 bool save( std::ostream & os, const int64_t e );
 
+double * load( std::istream & is, double * e );
+bool save( std::ostream & os, const double e );
 
 template <class _T,class _V>
 bool save( std::ostream & os, const std::pair<_T,_V> & e )
